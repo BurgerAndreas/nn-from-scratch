@@ -1,9 +1,9 @@
 import tensorflow as tf
 import numpy as np
 
-from models.sgd import create_linear_data, train_test_split
+from helpers.get_data import create_linear_data, train_test_split
 
-def tf_sgd_mse_lr():
+def tf_gd_mse_lr():
   """Train a linear regression model.
   With tensorflow gradient descent optimizer.
   Use Mean-Squared Error loss."""
@@ -22,7 +22,7 @@ def tf_sgd_mse_lr():
   return model
 
 
-def tf_sgd(epochs=10, learning_rate=0.1, momentum=0.9):
+def tf_gd(epochs=10, learning_rate=0.1, momentum=0.9):
   """ """
   # https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/experimental/SGD
   # create data

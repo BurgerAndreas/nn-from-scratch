@@ -1,4 +1,5 @@
-Learning how Generative Language Models work by implementing them from scratch.
+Understanding how Neural Networks work by implementing them from scratch.
+Building up towards Generative Language Models.
 
 Inspired by Andrej Karpathy's [makemore series](https://github.com/karpathy/makemore)
 

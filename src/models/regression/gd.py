@@ -1,41 +1,6 @@
 import numpy as np
 
-
-def create_linear_data(dim=1, num_samples=1000):
-  """Create data for linear regression."""
-  # create random data
-  x = np.random.rand(num_samples, dim) # (samples, dim)
-  w_true = np.random.randint(low=0, high=1, size=(dim, 1)) # (dim, 1)
-  b_true = np.random.rand(1) # (1,)
-  # f(x) = y = w * x + b
-  y_true = (x @ w_true) + b_true # (samples, 1)
-  # add noise
-  noise = np.random.normal(loc=0, scale=0.1, size=y_true.shape) # (samples,)
-  # noise = np.random.randn(*y_true.shape) # (samples,)
-  y_true += noise # (samples, 1)
-  # absorb bias into weights (with x0 = 1, b = w0)
-  x = np.concatenate([x, np.ones((x.shape[0], 1))], axis=1) # (samples, dim + 1)
-  w_true = np.concatenate([w_true, b_true.reshape(1, -1)], axis=0) # (dim + 1, 1)
-  # check shapes
-  # print(x.shape, w_true.shape, b_true.shape, y_true.shape)
-  return x, y_true, w_true, b_true
-
-
-def train_test_split(X, y, test_size=0.2):
-  """Split data into train and test sets."""
-  # split data
-  n = len(X)
-  n_test = int(n * test_size)
-  n_train = n - n_test
-  X_train = X[:n_train]
-  X_test = X[n_train:]
-  y_train = y[:n_train]
-  y_test = y[n_train:]
-  # check shapes
-  # print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
-  return X_train, X_test, y_train, y_test
-
-
+from helpers.get_data import create_linear_data, train_test_split
 
 class GradientDescentMSELinearRegression:
   """Train a linear regression model.

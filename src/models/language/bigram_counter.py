@@ -1,25 +1,10 @@
 import torch
 import matplotlib.pyplot as plt
 
+from helpers.get_data import load_names, g
+
 # https://youtu.be/PaCmpygFfXo
 
-# generator for randomness for reproducability
-g = torch.Generator().manual_seed(0)
-
-def load_names():
-  # Load data
-  words = open('data/names.txt', 'r').read().splitlines()
-  token = '.'
-  # set will remove duplicates (characters)
-  alphabet = sorted(list(set(''.join(words))))
-  # 26 letters + start and end token
-  num_tokens = len(alphabet) + 1
-  # map characters to integers
-  # 0 is reserved for the start and end token
-  chr_to_int = {ch: i+1 for i, ch in enumerate(alphabet)}
-  chr_to_int[token] = 0
-  int_to_chr = {i: ch for ch, i in chr_to_int.items()}
-  return words, token, num_tokens, chr_to_int, int_to_chr
 
 
 class BigramCounter:

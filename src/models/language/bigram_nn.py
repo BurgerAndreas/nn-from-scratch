@@ -1,7 +1,7 @@
 import torch
 import matplotlib.pyplot as plt
 
-from models.bigram_counter import load_names, g
+from helpers.get_data import load_names, g
 
 # https://youtu.be/PaCmpygFfXo
 

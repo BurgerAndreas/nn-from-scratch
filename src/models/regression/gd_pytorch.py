@@ -1,8 +1,8 @@
 import torch
 
-from models.sgd import create_linear_data, train_test_split
+from helpers.get_data import create_linear_data, train_test_split
 
-def torch_sgd_mse_nn(learning_rate = 0.1, momentum = 0.9, epochs = 10):
+def torch_gd_mse_nn(learning_rate = 0.1, momentum = 0.9, epochs = 10):
   """Train a linear regression model.
   With tensorflow gradient descent optimizer.
   Use Mean-Squared Error loss."""
@@ -34,7 +34,7 @@ def torch_sgd_mse_nn(learning_rate = 0.1, momentum = 0.9, epochs = 10):
   return sgd_model
 
 
-def torch_sgd_mse_lr(learning_rate = 0.1, momentum = 0.9, epochs = 100):
+def torch_gd_mse_lr(learning_rate = 0.1, momentum = 0.9, epochs = 100):
   """Train a linear regression model."""
   # create data
   X = torch.arange(-5, 5, 0.1).view(-1, 1)
@@ -72,7 +72,7 @@ def torch_sgd_mse_lr(learning_rate = 0.1, momentum = 0.9, epochs = 100):
     print(f'Epoch {i}:', loss.item())
 
 
-# def torch_sgd_mse_qr(learning_rate=0.1, momentum=0.9, epochs=10):
+# def torch_gd_mse_qr(learning_rate=0.1, momentum=0.9, epochs=10):
 #   """Train a quadratic regression model."""
 #   # model
 #   def f(x, params):
