@@ -13,10 +13,9 @@ from helpers.get_data import load_names, train_test_split
 
 
 class CharMLP:
-  """character bigram model. 
-  Predicts the next character in a word based on only the previous character.
-  Model works by counting occurances of bigrams.
-  Not a neural network."""
+  """
+  Predicts the next character based on a couple of previous characters.
+  """
 
   def __init__(self, block_size=3, dim_emb=10, num_neurons_hidden=50, epochs=10000):
     """Initializes the model, hyperparameters, and data."""

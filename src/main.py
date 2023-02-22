@@ -8,7 +8,9 @@ from models.regression.gd_pytorch import torch_gd_mse_nn, torch_gd_mse_lr
 from models.regression.mlp_regression_scratch import scratch_mlp
 from models.language.bigram_counter import test_counting_bigram_model
 from models.language.bigram_nn import test_nn_bigram_model
-from models.language.mlp_char import CharMLP
+from models.language.mlp_scratch import CharMLP
+from models.language.mlp_torch import CharMLP2
+
 
 def main():
   print('-' * 80)
@@ -29,7 +31,9 @@ def main():
   # test_counting_bigram_model()
   # test_nn_bigram_model()
 
-  mlp = CharMLP()
+  # mlp = CharMLP()
+  mlp = CharMLP2()
+  mlp.train_and_test()
 
 if __name__ == '__main__':
   main()
