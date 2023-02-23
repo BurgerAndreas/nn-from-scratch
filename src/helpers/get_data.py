@@ -23,6 +23,24 @@ def load_names():
   return words, token, num_tokens, chr_to_int, int_to_chr
 
 
+def build_dataset(words, block_size, chr_to_int):
+    """
+    Like a list of bigrams, but with more characters."""
+    # context length: how many characters do we take to predict the next one? 
+    x, y = [], []
+    for w in words:
+      context = [0] * block_size
+      for ch in w + '.':
+        ix = chr_to_int[ch]
+        x.append(context)
+        y.append(ix)
+        #print(''.join(itos[i] for i in context), '--->', itos[ix])
+        context = context[1:] + [ix] # crop and append
+    x = torch.tensor(x)
+    y = torch.tensor(y)
+    return x, y
+
+
 def create_linear_data(dim=1, num_samples=1000, plot=False):
   """Create data for linear regression."""
   # create random data

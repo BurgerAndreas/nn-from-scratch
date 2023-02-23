@@ -10,6 +10,7 @@ from models.language.bigram_counter import test_counting_bigram_model
 from models.language.bigram_nn import test_nn_bigram_model
 from models.language.mlp_scratch import CharMLP
 from models.language.mlp_torch import CharMLP2
+from models.language.wavenet import Wavenet
 
 
 def main():
@@ -32,8 +33,12 @@ def main():
   # test_nn_bigram_model()
 
   # mlp = CharMLP()
-  mlp = CharMLP2()
-  mlp.train_and_test()
+  # improved version
+  # mlp = CharMLP2()
+  # mlp.train_and_test()
+
+  # wavenet = convulutional neural network
+  Wavenet(len_context=8)
 
 if __name__ == '__main__':
   main()

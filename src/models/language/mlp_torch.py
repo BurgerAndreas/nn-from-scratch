@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 
-from helpers.get_data import load_names, train_test_split
+from helpers.get_data import load_names, train_test_split, build_dataset
 
 #  https://youtu.be/P6sfmUTpUmc?t=4713
 # https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part3_bn.ipynb
@@ -132,7 +132,7 @@ class CharMLP2:
     self.train_and_test(words)
   
   def train_and_test(self, words, epochs=1000):
-    x, y = self.build_dataset(words)
+    x, y = build_dataset(words, self.block_size, self.chr_to_int)
     x_train, x_test, y_train, y_test = train_test_split(x, y)
     lossi, ud = self.train(x_train, y_train, epochs=epochs)
     # visualize
@@ -189,25 +189,6 @@ class CharMLP2:
       p.requires_grad = True
     return c, layers, parameters
 
-  
-  def build_dataset(self, words):
-    """
-    Like a list of bigrams, but with more characters."""
-    # context length: how many characters do we take to predict the next one? 
-    x, y = [], []
-    for w in words:
-      context = [0] * self.block_size
-      for ch in w + '.':
-        ix = self.chr_to_int[ch]
-        x.append(context)
-        y.append(ix)
-        #print(''.join(itos[i] for i in context), '--->', itos[ix])
-        context = context[1:] + [ix] # crop and append
-    x = torch.tensor(x)
-    y = torch.tensor(y)
-    return x, y
-
-
   def train(self, x_train, y_train, epochs, batch_size=32):
     # same optimization as last time
     lossi = []
@@ -222,7 +203,6 @@ class CharMLP2:
       for layer in self.layers:
         x = layer(x)
       loss = F.cross_entropy(x, Yb) # loss function
-      
       # backward pass
       for layer in self.layers:
         layer.out.retain_grad() # AFTER_DEBUG: would take out retain_graph
