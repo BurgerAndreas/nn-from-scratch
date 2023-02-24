@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 
-from helpers.get_data import load_names, train_test_split, build_dataset
+from helpers.get_data import load_names, train_test_split, build_char_dataset
 
 #  https://youtu.be/P6sfmUTpUmc?t=4713
 # https://github.com/karpathy/nn-zero-to-hero/blob/master/lectures/makemore/makemore_part3_bn.ipynb
@@ -132,7 +132,7 @@ class CharMLP2:
     self.train_and_test(words)
   
   def train_and_test(self, words, epochs=1000):
-    x, y = build_dataset(words, self.block_size, self.chr_to_int)
+    x, y = build_char_dataset(words, self.block_size, self.chr_to_int)
     x_train, x_test, y_train, y_test = train_test_split(x, y)
     lossi, ud = self.train(x_train, y_train, epochs=epochs)
     # visualize

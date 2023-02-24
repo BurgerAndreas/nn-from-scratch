@@ -11,6 +11,8 @@ from models.language.bigram_nn import test_nn_bigram_model
 from models.language.mlp_scratch import CharMLP
 from models.language.mlp_torch import CharMLP2
 from models.language.wavenet import Wavenet
+from models.language.bigram_torch import ShakespeareBigram
+from models.language.transformer import ShakespeareLM
 
 
 def main():
@@ -38,7 +40,12 @@ def main():
   # mlp.train_and_test()
 
   # wavenet = convulutional neural network
-  Wavenet(len_context=8)
+  # model = Wavenet(len_context=8)
+
+  # Shakespeare generative language model
+  # model = ShakespeareBigram()
+  model = ShakespeareLM(model_size='big')
+
 
 if __name__ == '__main__':
   main()

@@ -7,40 +7,6 @@ import matplotlib.pyplot as plt
 g = torch.Generator().manual_seed(42)
 
 
-def load_names():
-  # Load data
-  words = open('data/names.txt', 'r').read().splitlines()
-  token = '.'
-  # set will remove duplicates (characters)
-  alphabet = sorted(list(set(''.join(words))))
-  # 26 letters + start and end token
-  num_tokens = len(alphabet) + 1
-  # map characters to integers
-  # 0 is reserved for the start and end token
-  chr_to_int = {ch: i+1 for i, ch in enumerate(alphabet)}
-  chr_to_int[token] = 0
-  int_to_chr = {i: ch for ch, i in chr_to_int.items()}
-  return words, token, num_tokens, chr_to_int, int_to_chr
-
-
-def build_dataset(words, block_size, chr_to_int):
-    """
-    Like a list of bigrams, but with more characters."""
-    # context length: how many characters do we take to predict the next one? 
-    x, y = [], []
-    for w in words:
-      context = [0] * block_size
-      for ch in w + '.':
-        ix = chr_to_int[ch]
-        x.append(context)
-        y.append(ix)
-        #print(''.join(itos[i] for i in context), '--->', itos[ix])
-        context = context[1:] + [ix] # crop and append
-    x = torch.tensor(x)
-    y = torch.tensor(y)
-    return x, y
-
-
 def create_linear_data(dim=1, num_samples=1000, plot=False):
   """Create data for linear regression."""
   # create random data
@@ -80,7 +46,10 @@ def create_random_data(num_samples=1000, dim=1, binary=False, step_fct=False):
 
 
 def train_test_split(X, y, test_size=0.2):
-  """Split data into train and test sets."""
+  """
+  Split data into train and test sets.
+  For regression data or names.
+  """
   # split data
   n = len(X)
   n_test = int(n * test_size)
@@ -92,3 +61,88 @@ def train_test_split(X, y, test_size=0.2):
   # check shapes
   # print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
   return X_train, X_test, y_train, y_test
+
+
+def load_names():
+  """
+  For names.
+  """
+  # Load data
+  words = open('data/names.txt', 'r').read().splitlines()
+  token = '.'
+  # set will remove duplicates (characters)
+  alphabet = sorted(list(set(''.join(words))))
+  # 26 letters + start and end token
+  num_tokens = len(alphabet) + 1
+  # map characters to integers
+  # 0 is reserved for the start and end token
+  chr_to_int = {ch: i+1 for i, ch in enumerate(alphabet)}
+  chr_to_int[token] = 0
+  int_to_chr = {i: ch for ch, i in chr_to_int.items()}
+  return words, token, num_tokens, chr_to_int, int_to_chr
+
+
+def build_char_dataset(words, block_size, chr_to_int):
+  """
+  Like a list of bigrams, but with more characters.
+  For names.
+  """
+  # context length: how many characters do we take to predict the next one? 
+  x, y = [], []
+  for w in words:
+    context = [0] * block_size
+    for ch in w + '.':
+      ix = chr_to_int[ch]
+      x.append(context)
+      y.append(ix)
+      #print(''.join(itos[i] for i in context), '--->', itos[ix])
+      context = context[1:] + [ix] # crop and append
+  x = torch.tensor(x)
+  y = torch.tensor(y)
+  return x, y
+
+
+def load_text(src='data/tiny_shakespeare.txt'):
+  """
+  For tiny shakespeare.
+  """
+  # wget https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt
+  with open(src, 'r', encoding='utf-8') as f:
+    text = f.read()
+  # here are all the unique characters that occur in this text
+  vocabulary = sorted(list(set(text)))
+  vocab_size = len(vocabulary)
+  # create a mapping from characters to integers
+  chr_to_int = { ch:i for i,ch in enumerate(vocabulary) }
+  int_to_chr = { i:ch for i,ch in enumerate(vocabulary) }
+  encode = lambda s: [chr_to_int[c] for c in s] # encoder: take a string, output a list of integers
+  decode = lambda l: ''.join([int_to_chr[i] for i in l]) # decoder: take a list of integers, output a string
+  return text, vocabulary, vocab_size, encode, decode
+
+
+def train_val_split_text(data, train_size=0.9):
+  """
+  For tiny shakespeare.
+  """
+  # Train and test splits
+  n = int(train_size*len(data)) 
+  # first train_size % will be train, rest val
+  train_data = data[:n]
+  val_data = data[n:]
+  return train_data, val_data
+
+
+  
+def plot_loss(losses, n_points=-1):
+  # plt.plot(losses_log)
+  if n_points == -1:
+    loss_smooth = torch.tensor(losses)
+  else:
+    # average into n_points
+    loss_smooth = torch.tensor(losses).view(-1, int(len(losses)/n_points)).mean(1)
+  plt.plot(loss_smooth)
+  plt.xlabel('iteration')
+  plt.ylabel('loss')
+  plt.title('Training loss')
+  plt.show()
+  return loss_smooth

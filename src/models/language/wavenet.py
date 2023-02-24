@@ -3,7 +3,7 @@ import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import math as m
 
-from helpers.get_data import load_names, train_test_split, build_dataset
+from helpers.get_data import load_names, train_test_split, build_char_dataset, plot_loss
 from models.language.mlp_torch import Linear, BatchNorm1d, Tanh
 
 
@@ -102,7 +102,7 @@ class Wavenet:
     self.len_context = len_context
     # load data
     words, self.token, self.vocab_size, self.chr_to_int, self.int_to_chr = load_names()
-    x, y = build_dataset(words, self.len_context, self.chr_to_int)
+    x, y = build_char_dataset(words, self.len_context, self.chr_to_int)
     x_train, x_test, y_train, y_test = train_test_split(x, y)
     # init model
     self.model, self.parameters = self.init_model()
@@ -204,17 +204,6 @@ class Wavenet:
         print(f'{i:7d}/{epochs:7d}: {loss.item():.4f}')
       losses_log.append(loss.log10().item())
     return losses_log
-  
-  def plot_loss(self, losses_log, epochs=1000, n_points=100):
-    # plt.plot(losses_log)
-    # average into n_points
-    loss_smooth = torch.tensor(losses_log).view(-1, int(epochs/n_points)).mean(1)
-    plt.plot(loss_smooth)
-    plt.xlabel('iteration')
-    plt.ylabel('log10(loss)')
-    plt.title('Training loss')
-    plt.show()
-    return loss_smooth
 
   def evaluate_model(self, x_train, y_train, x_test, y_test):
     # put layers into eval mode (needed for batchnorm especially)
